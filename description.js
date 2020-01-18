@@ -37,7 +37,7 @@ function parseDescription(description) {
     let timestamps = [];
     for (line of lines) {
         //console.log(line);
-        const regex = /[1-9]?[0-9]:[0-9][0-9]/;
+        const regex = /([1-9]?[0-9]:)?[1-5]?[0-9]:[0-9][0-9]/;
         if (regex.test(line)) {
             let text = line.replace(regex, '');
             let stamp = line.match(regex)[0];
