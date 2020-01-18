@@ -36,11 +36,17 @@ window.onload = () => {
         placement = currentTime/totalTime;
         console.log(timestamps);
         console.log(placement);
+        // let left = placement*100;
+        // console.log(left);
+        // addMarker(left);
     };
-    $('.ytp-progress-list').prepend(
-        '<div class="ytstmp-mrkr" style=background-color:#00FFFF;width:.40%;left:10%;z-index:100000;height:175%;position:relative;top:-0.35em;></div>'
-    );
 };
+
+function addMarker(percentage) {
+  $('.ytp-progress-list').prepend(
+      `<div class="ytstmp-mrkr" style=background-color:#00FFFF;width:.40%;left:${percentage}%;z-index:100000;height:175%;position:absolute;top:-0.35em;></div>`
+  );
+}
 
 function parseDescription(description) {
     let lines = description.split('\n');
@@ -50,6 +56,7 @@ function parseDescription(description) {
         if (regex.test(line)) {
             let text = line.replace(regex, '');
             let stamp = line.match(regex)[0];
+            addMarker(timeToPercentage(stamp));
             console.log({ text, stamp });
             timestamps.push({ text, stamp });
         }
