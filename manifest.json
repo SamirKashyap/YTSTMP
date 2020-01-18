@@ -1,5 +1,5 @@
 {
-    "manifest_version" : 2,
+    "manifest_version": 2,
     "name": "YTSTMP",
     "version": "1.0",
     "description": "A extension for timestamping Youtube videos.",
@@ -8,7 +8,16 @@
         "48": "icon48.png",
         "16": "icon16.png"
     },
-    "browser_action":{
+    "permissions": [
+        "activeTab"
+    ],
+    "background": {
+        "scripts": [
+            "description.js"
+        ]
+    },
+
+    "browser_action": {
         "default_icon": "icon16.png",
         "default_popup": "popup.html"
     }
