@@ -1,58 +1,79 @@
 var timestamps = [];
-ytplayer = document.getElementsByClassName("ytp-time-current");
-const api_key = "AIzaSyChX7b0VFxndHfnqsbMCXRFXzVmMTBlTcQ";
+ytplayercurrent = document.getElementsByClassName('ytp-time-current');
+ytplayertotal = document.getElementsByClassName('ytp-time-duration');
+const api_key = 'AIzaSyChX7b0VFxndHfnqsbMCXRFXzVmMTBlTcQ';
 
 window.onload = () => {
-  let video_id = window.location.search.split("v=")[1];
-  if (video_id.includes("&")) {
-    let ampersandPosition = video_id.indexOf("&");
-    if (ampersandPosition != -1) {
-      video_id = video_id.substring(0, ampersandPosition);
+    totalTime = calculateTime(ytplayertotal[0].innerText.toString().split(":"));
+    let video_id = window.location.search.split('v=')[1];
+    if (video_id.includes('&')) {
+        let ampersandPosition = video_id.indexOf('&');
+        if (ampersandPosition != -1) {
+            video_id = video_id.substring(0, ampersandPosition);
+        }
     }
   }
   let url = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${video_id}&fields=items/snippet/title,items/snippet/description&key=${api_key}`;
   console.log(url);
 
-  fetch(url)
-    .then(data => {
-      return data.json();
-    })
-    .then(response => {
-      let description = response.items[0].snippet.description;
-      parseDescription(description);
-    })
-    .catch(error => {
-      console.log(error);
-    });
+    fetch(url)
+        .then((data) => {
+            return data.json();
+        })
+        .then((response) => {
+            let description = response.items[0].snippet.description;
+            let duration = $('.ytp-time-duration').text();
+            console.log(duration);
+            parseDescription(description);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 
-  onmousedown = () => {
-    timestamps.push(ytplayer[0].innerText);
-    console.log(timestamps);
-  };
+    onmousedown = () => {
+        timestamps.push(ytplayercurrent[0].innerText);
+        currentTime = calculateTime(ytplayercurrent[0].innerText.toString().split(":"));
+        timestamps.push(currentTime);
+        placement = currentTime/totalTime;
+        console.log(timestamps);
+        console.log(placement);
+        // let left = placement*100;
+        // console.log(left);
+        // addMarker(left);
+    };
 };
 
+function addMarker(percentage) {
+  $('.ytp-progress-list').prepend(
+      `<div class="ytstmp-mrkr" style=background-color:#00FFFF;width:.40%;left:${percentage}%;z-index:100000;height:175%;position:absolute;top:-0.35em;></div>`
+  );
+}
+
 function parseDescription(description) {
-  let lines = description.split("\n");
-  let timestamps = [];
-  for (line of lines) {
-    const regex = /([1-9]?[0-9]:)?[0-5]?[0-9]:[0-5][0-9]/;
-    if (regex.test(line)) {
-      let text = line.replace(regex, "");
-      let stamp = line.match(regex)[0];
-      console.log({ text, stamp });
-      timestamps.push({ text, stamp });
+    let lines = description.split('\n');
+    let timestamps = [];
+    for (line of lines) {
+        const regex = /([1-9]?[0-9]:)?[0-5]?[0-9]:[0-5][0-9]/;
+        if (regex.test(line)) {
+            let text = line.replace(regex, '');
+            let stamp = line.match(regex)[0];
+            addMarker(timeToPercentage(stamp));
+            console.log({ text, stamp });
+            timestamps.push({ text, stamp });
+        }
     }
   }
   return timestamps;
 }
 
-fetch("http://127.0.0.1:4000/graphql", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json"
-  },
-  body: '{"query": "{ videos { id, length } }"}'
-})
-  .then(r => r.json())
-  .then(data => console.log("data returned:", data));
+function calculateTime(time){
+    let totalTime = 0;
+    let position = time.length - 1; 
+    let multiplier = 1;
+    while(position >= 0){
+        totalTime += time[position] * multiplier;
+        multiplier = multiplier * 60;
+        position -= 1;
+    }
+    return totalTime;
+}
