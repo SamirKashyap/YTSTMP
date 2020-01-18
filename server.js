@@ -32,10 +32,11 @@ var schema = buildSchema(`
 
 var mysql = require("mysql");
 var connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "Admin123",
-  database: "ytstmp"
+  host: "ytstmp.c4z3dnircpx7.us-east-1.rds.amazonaws.com",
+  user: "admin",
+  password: "tubestamp",
+  database: "ytstmp",
+  port: "3306"
 });
 
 const queryDB = query =>
