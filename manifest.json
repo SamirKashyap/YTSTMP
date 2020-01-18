@@ -3,11 +3,11 @@
     "name": "YTSTMP",
     "version": "1.0",
     "description": "A extension for timestamping Youtube videos.",
-    "permissions": ["tabs", "*://youtube.com/*"],
+    "permissions": ["tabs", "https://*.youtube.com/*"],
     "content_scripts": [
         {
-            "matches": ["*://youtube.com/*"],
-            "js": ["popup.js"]
+            "matches": ["https://*.youtube.com/*"],
+            "js": ["popup.js", "jquery-3.4.1.min.js"]
         }
     ],
     "icons": {
@@ -15,16 +15,8 @@
         "48": "icon48.png",
         "16": "icon16.png"
     },
-    "permissions": [
-        "activeTab"
-    ],
     "background": {
-        "scripts": [
-            "description.js"
-        ]
-    },
-    "page_action":{
-        "default_icon": "icon16.png",
-        "default_popup": "popup.html"
+        "scripts": ["eventPage.js"],
+        "persistent": false
     }
 }
