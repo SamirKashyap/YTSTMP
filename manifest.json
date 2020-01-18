@@ -4,10 +4,13 @@
     "version": "1.0",
     "description": "A extension for timestamping Youtube videos.",
     "permissions": ["tabs", "https://*.youtube.com/*"],
-    "content_scripts": [
-        {
+    "content_scripts": [{
             "matches": ["https://*.youtube.com/*"],
             "js": ["popup.js", "jquery-3.4.1.min.js"]
+        },
+        {
+            "matches": ["https://*.youtube.com/*"],
+            "js": ["description.js", "jquery-3.4.1.min.js"]
         }
     ],
     "icons": {

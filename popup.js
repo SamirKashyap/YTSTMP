@@ -1,1 +1,3 @@
-chrome.runtime.sendMessage({todo: "showIcon"});
+chrome.runtime.sendMessage({
+    todo: "showIcon"
+});
