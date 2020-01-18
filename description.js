@@ -20,6 +20,8 @@ window.onload = () => {
         })
         .then((response) => {
             let description = response.items[0].snippet.description;
+            let duration = $('.ytp-time-duration').text();
+            console.log(duration);
             parseDescription(description);
         })
         .catch((error) => {
@@ -45,6 +47,8 @@ window.onload = () => {
         console.log(timestamps);
         console.log(placement);
     };
+
+    $('.ytp-progress-list').prepend("<div class=\"ytstmp-mrkr\" style=background-color:#00FFFF;width:.75%;left:10%;z-index:100000;height:500%;position:absolute;margin-bottom:100px;></div>");
 };
 
 function parseDescription(description) {
