@@ -23,9 +23,6 @@ window.onload = () => {
             console.log(error);
         });
 
-    // $('#description')
-    //     .children()
-    //     .text('C0rnH4ck5');
     onmousedown = () => {
         timestamps.push(ytplayer[0].innerText);
         console.log(timestamps);
@@ -36,8 +33,7 @@ function parseDescription(description) {
     let lines = description.split('\n');
     let timestamps = [];
     for (line of lines) {
-        //console.log(line);
-        const regex = /([1-9]?[0-9]:)?[1-5]?[0-9]:[0-9][0-9]/;
+        const regex = /([1-9]?[0-9]:)?[0-5]?[0-9]:[0-5][0-9]/;
         if (regex.test(line)) {
             let text = line.replace(regex, '');
             let stamp = line.match(regex)[0];
