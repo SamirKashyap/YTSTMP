@@ -4,9 +4,11 @@ const api_key = 'AIzaSyChX7b0VFxndHfnqsbMCXRFXzVmMTBlTcQ';
 
 window.onload = () => {
     let video_id = window.location.search.split('v=')[1];
-    let ampersandPosition = video_id.indexOf('&');
-    if (ampersandPosition != -1) {
-        video_id = video_id.substring(0, ampersandPosition);
+    if (video_id.includes('&')) {
+        let ampersandPosition = video_id.indexOf('&');
+        if (ampersandPosition != -1) {
+            video_id = video_id.substring(0, ampersandPosition);
+        }
     }
     let url = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${video_id}&fields=items/snippet/title,items/snippet/description&key=${api_key}`;
     console.log(url);
