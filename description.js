@@ -1,3 +1,5 @@
+var timestamps = [];
+ytplayer = document.getElementsByClassName('ytp-time-current');
 const api_key = 'AIzaSyChX7b0VFxndHfnqsbMCXRFXzVmMTBlTcQ';
 
 window.onload = () => {
@@ -24,6 +26,10 @@ window.onload = () => {
     // $('#description')
     //     .children()
     //     .text('C0rnH4ck5');
+    onmousedown = () => {
+        timestamps.push(ytplayer[0].innerText);
+        console.log(timestamps);
+    };
 };
 
 function parseDescription(description) {
