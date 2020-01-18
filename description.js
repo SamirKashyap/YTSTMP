@@ -32,7 +32,9 @@ window.onload = () => {
         //console.log(timestamps);
     };
 
-    $('.ytp-progress-list').prepend("<div class=\"ytstmp-mrkr\" style=background-color:#00FFFF;width:.75%;left:10%;z-index:100000;height:500%;position:absolute;margin-bottom:100px;></div>");
+    $('.ytp-progress-list').prepend(
+        '<div class="ytstmp-mrkr" style=background-color:#00FFFF;width:.40%;left:10%;z-index:100000;height:175%;position:relative;top:-0.35em;></div>'
+    );
 };
 
 function parseDescription(description) {
