@@ -19,6 +19,8 @@ window.onload = () => {
         })
         .then((response) => {
             let description = response.items[0].snippet.description;
+            let duration = $('.ytp-time-duration').text();
+            console.log(duration);
             parseDescription(description);
         })
         .catch((error) => {
@@ -30,7 +32,7 @@ window.onload = () => {
     //     .text('C0rnH4ck5');
     onmousedown = () => {
         timestamps.push(ytplayer[0].innerText);
-        console.log(timestamps);
+        //console.log(timestamps);
     };
 };
 
