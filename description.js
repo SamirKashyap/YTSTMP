@@ -66,9 +66,27 @@ function parseDescription(description) {
         if (regex.test(line)) {
             let text = line.replace(regex, '');
             let stamp = line.match(regex)[0];
+            addMarker(timeToPercentage(stamp));
             console.log({ text, stamp });
             timestamps.push({ text, stamp });
         }
     }
     return timestamps;
+}
+
+function timeToPercentage(time){
+  time = time.split(":");
+  let placement = 0;
+  othertime = ytplayertotal[0].innerText.toString().split(":");
+  if(time.length === 2){ //under an hour
+      if(othertime.length === 2){
+          placement = (time[0] * 60 + time[1])/(othertime[0] * 60 + othertime[1]);
+      }
+      else
+          placement = (time[0] * 60 + time[1])/(othertime[0] * 3600 + othertime[1] * 60 + othertime[2]);
+  }
+  if(time.length === 3){ //over an hour
+      placement = (time[0] * 3600 + time[1] * 60 + time[2])/(othertime[0] * 3600 + othertime[1] * 60 + othertime[2]);
+  }
+  return placement * 100.0;
 }
