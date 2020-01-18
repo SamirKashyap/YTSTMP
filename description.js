@@ -29,6 +29,8 @@ window.onload = () => {
         timestamps.push(ytplayer[0].innerText);
         console.log(timestamps);
     };
+
+    $('.ytp-progress-list').prepend("<div class=\"ytstmp-mrkr\" style=background-color:#00FFFF;width:.75%;left:10%;z-index:100000;height:500%;position:absolute;margin-bottom:100px;></div>");
 };
 
 function parseDescription(description) {
