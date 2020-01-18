@@ -3,12 +3,19 @@
     "name": "YTSTMP",
     "version": "1.0",
     "description": "A extension for timestamping Youtube videos.",
+    "permissions": ["tabs", "*://youtube.com/*"],
+    "content_scripts": [
+        {
+            "matches": ["*://youtube.com/*"],
+            "js": ["popup.js"]
+        }
+    ],
     "icons": {
         "128": "icon128.png",
         "48": "icon48.png",
         "16": "icon16.png"
     },
-    "browser_action":{
+    "page_action":{
         "default_icon": "icon16.png",
         "default_popup": "popup.html"
     }
