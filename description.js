@@ -19,14 +19,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     doSomething();
 });
 
-
-  }
-    console.log(Type, StartTime, EndTime, Description);
+    
+function Submit() {
+    let Type = document.getElementById("Type").value;
     let Description = document.getElementByName("Description").value;
     let EndTime = document.getElementByName("EndTime").value;
     let StartTime = document.getElementByName("StartTime").value;
-function Submit() {
-    let Type = document.getElementById("Type").value;
+    console.log(Type, StartTime, EndTime, Description);
+}
 function addMarker(percentage,description) {
   if(percentage > 50){
     $('.ytp-progress-list').prepend(
