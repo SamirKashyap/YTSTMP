@@ -1,42 +1,13 @@
 var express = require("express");
 var graphqlHTTP = require("express-graphql");
-var { buildSchema } = require("graphql");
-
-// Construct a schema, using GraphQL schema language
-var schema = buildSchema(`
-  type Query {
-    videos: [Video]
-    video(id: ID!): Video
-    timestamps: [Timestamp]
-    timestamp(id: ID!): Timestamp
-  }
-
-  type Mutation {
-    createVideo(id: ID!, length: Int!): Video
-    createTimestamp(video_id: ID!, time: Int!, name: String): Timestamp
-  }
-
-  type Video {
-    id: ID!
-    length: Int!
-    timestamps: [Timestamp]
-  }
-
-  type Timestamp {
-    id: ID!
-    video: Video!
-    time: Int!
-    name: String
-  }
-`);
+const schema = require("./schema");
 
 var mysql = require("mysql");
 var connection = mysql.createConnection({
-  host: "ytstmp.c4z3dnircpx7.us-east-1.rds.amazonaws.com",
-  user: "admin",
-  password: "tubestamp",
-  database: "ytstmp",
-  port: "3306"
+  host: "localhost",
+  user: "root",
+  password: "Admin123",
+  database: "ytstmp"
 });
 
 const queryDB = query =>
@@ -51,7 +22,7 @@ const queryDB = query =>
 var root = {
   createVideo: async ({ id, length }) => {
     const rows = await queryDB(
-      `INSERT INTO videos(id, length) VALUES ("${id}", ${length})`
+      `INSERT INTO videos(id, length) VALUES ("${id}", ${length}) `
     );
     return { id: id, length: length, timestamps: [] };
   },

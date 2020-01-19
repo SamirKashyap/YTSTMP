@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html>
+    <script src="description.js"></script>
     <head>
         <title>Title</title>
     </head>
     <body>
-        <form>
-        <select id='type'>
-            <option value="0">Ad</option>
-            <option value="1">Timestamp</option>
-        </select>
-        <br>
-        Start time: <input type="text" name="StartTime"><br>
-        End time: <input type="text" name="EndTime"><br>
-        Description: <input type="text" name="Description"><br>
-        <input type="submit" value="Submit"><br>
+        <form id=submitForm>
+            <select id='type'>
+            <option value="Ad">Ad</option>
+            <option value="Timestamp">Timestamp</option>
+            </select><br>
+            Start time: <input type="text" name="StartTime"><br>
+            End time: <input type="text" name="EndTime"><br>
+            Description: <input type="text" name="Description"><br>
+            <button onclick= "Submit()">Submit</button><br>
         </form>
     </body>
 </html>
