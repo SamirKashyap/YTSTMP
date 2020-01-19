@@ -1,4 +1,4 @@
-const api_key = "AIzaSyChX7b0VFxndHfnqsbMCXRFXzVmMTBlTcQ";
+const api_key = 'AIzaSyChX7b0VFxndHfnqsbMCXRFXzVmMTBlTcQ';
 
 // let ads = [{
 //         video_id: 'k8V7XV8hjDs',
@@ -23,31 +23,31 @@ ads.set('DevM3bbGtoA', {
 });
 
 window.onload = () => {
-  clearMarkers();
-  doSomething();
-  doSomethingElse();
-  // window.addEventListener("yt-navigate-start", () => {
-  //     //chrome.webNavigation.onHistoryStateUpdated( () => {
-  //     duration = $('.ytp-time-duration').text();
-  //     clearMarkers();
-  //     doSomething();
-  // });
-  //doSomething();
+    clearMarkers();
+    doSomething();
+    doSomethingElse();
+    // window.addEventListener("yt-navigate-start", () => {
+    //     //chrome.webNavigation.onHistoryStateUpdated( () => {
+    //     duration = $('.ytp-time-duration').text();
+    //     clearMarkers();
+    //     doSomething();
+    // });
+    //doSomething();
 };
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  //here we get the new
-  console.log("URL CHANGED: " + request.data.url);
-  clearMarkers();
-  doSomething();
+    //here we get the new
+    console.log('URL CHANGED: ' + request.data.url);
+    clearMarkers();
+    doSomething();
 });
 
 function Submit() {
-  let Type = document.getElementById("Type").value;
-  let Description = document.getElementByName("Description").value;
-  let EndTime = document.getElementByName("EndTime").value;
-  let StartTime = document.getElementByName("StartTime").value;
-  console.log(Type, StartTime, EndTime, Description);
+    let Type = document.getElementById('Type').value;
+    let Description = document.getElementByName('Description').value;
+    let EndTime = document.getElementByName('EndTime').value;
+    let StartTime = document.getElementByName('StartTime').value;
+    console.log(Type, StartTime, EndTime, Description);
 }
 
 function addMarker(percentage, description) {
@@ -73,23 +73,23 @@ function addMarker(percentage, description) {
 }
 
 function addAd(start, end) {
-  let width = end - start;
-  console.log(start);
-  console.log(width);
-  $(".ytp-progress-list").prepend(
-    `<div class="ytstmp-mrkr" style=background-color:#FFFF00;width:${width}%;left:${start}%;z-index:100000;height:175%;position:absolute;top:-0.35em;></div>`
-  );
+    let width = end - start;
+    console.log(start);
+    console.log(width);
+    $('.ytp-progress-list').prepend(
+        `<div class="ytstmp-mrkr" style=background-color:#FFFF00;width:${width}%;left:${start}%;z-index:100000;height:175%;position:absolute;top:-0.35em;></div>`
+    );
 }
 
-$("video").on(
-    "timeupdate",
-    function (event) {
-        let video_id = getVideoID();
-        if (Math.floor(this.currentTime) === calculateTime(ads.get(video_id).start)) {
-            //window.location.href = `https://www.youtube.com/watch?v=${ads[0].video_id}&t=${calculateTime(ads[0].end)}s`;
-            this.currentTime = calculateTime(ads.get(video_id).end);
-        }
-    });
+$('video').on('timeupdate', function(event) {
+    let video_id = getVideoID();
+    if (
+        Math.floor(this.currentTime) === calculateTime(ads.get(video_id).start)
+    ) {
+        //window.location.href = `https://www.youtube.com/watch?v=${ads[0].video_id}&t=${calculateTime(ads[0].end)}s`;
+        this.currentTime = calculateTime(ads.get(video_id).end);
+    }
+});
 
 // $('.ytp-time-current').on("change", () => {
 //     console.log($('.ytp-time-current').text());
@@ -99,24 +99,24 @@ $("video").on(
 // })
 
 function parseDescription(description) {
-  let lines = description.split("\n");
-  let timestamps = [];
-  for (line of lines) {
-    const regex = /([1-9]?[0-9]:)?[0-5]?[0-9]:[0-5][0-9]/;
-    if (regex.test(line)) {
-      let text = line.replace(regex, "");
-      let stamp = line.match(regex)[0];
-      console.log({
-        text,
-        stamp
-      });
-      timestamps.push({
-        text,
-        stamp
-      });
+    let lines = description.split('\n');
+    let timestamps = [];
+    for (line of lines) {
+        const regex = /([1-9]?[0-9]:)?[0-5]?[0-9]:[0-5][0-9]/;
+        if (regex.test(line)) {
+            let text = line.replace(regex, '');
+            let stamp = line.match(regex)[0];
+            console.log({
+                text,
+                stamp
+            });
+            timestamps.push({
+                text,
+                stamp
+            });
+        }
     }
-  }
-  return timestamps;
+    return timestamps;
 }
 
 function getVideoID() {
@@ -145,14 +145,25 @@ function doSomething() {
 
             let duration = response.items[0].contentDetails.duration;
             let iso8601DurationRegex = /(-)?P(?:([.,\d]+)Y)?(?:([.,\d]+)M)?(?:([.,\d]+)W)?(?:([.,\d]+)D)?(?:T(?:([.,\d]+)H)?(?:([.,\d]+)M)?(?:([.,\d]+)S)?)?/;
-            let durationParsed = parseISO8601Duration(duration, iso8601DurationRegex);
-            let finalDuration = `${('' + durationParsed.hours).padStart(2, '0')}:${('' + durationParsed.minutes).padStart(2, '0')}:${('' + durationParsed.seconds).padStart(2, '0')}`;
+            let durationParsed = parseISO8601Duration(
+                duration,
+                iso8601DurationRegex
+            );
+            let finalDuration = `${('' + durationParsed.hours).padStart(
+                2,
+                '0'
+            )}:${('' + durationParsed.minutes).padStart(2, '0')}:${(
+                '' + durationParsed.seconds
+            ).padStart(2, '0')}`;
 
             let newStamps = parseDescription(description);
 
             console.log(finalDuration);
             for (stamp of newStamps) {
-                let percentage = calculateTimePercentage(stamp.stamp, finalDuration)
+                let percentage = calculateTimePercentage(
+                    stamp.stamp,
+                    finalDuration
+                );
                 //console.log(percentage);
                 addMarker(percentage, stamp.text);
             }
@@ -176,58 +187,71 @@ function doSomethingElse() {
 
             let duration = response.items[0].contentDetails.duration;
             let iso8601DurationRegex = /(-)?P(?:([.,\d]+)Y)?(?:([.,\d]+)M)?(?:([.,\d]+)W)?(?:([.,\d]+)D)?(?:T(?:([.,\d]+)H)?(?:([.,\d]+)M)?(?:([.,\d]+)S)?)?/;
-            let durationParsed = parseISO8601Duration(duration, iso8601DurationRegex);
-            let finalDuration = `${('' + durationParsed.hours).padStart(2, '0')}:${('' + durationParsed.minutes).padStart(2, '0')}:${('' + durationParsed.seconds).padStart(2, '0')}`;
+            let durationParsed = parseISO8601Duration(
+                duration,
+                iso8601DurationRegex
+            );
+            let finalDuration = `${('' + durationParsed.hours).padStart(
+                2,
+                '0'
+            )}:${('' + durationParsed.minutes).padStart(2, '0')}:${(
+                '' + durationParsed.seconds
+            ).padStart(2, '0')}`;
 
             let newStamps = parseDescription(description);
-            let start = calculateTimePercentage(ads.get(video_id).start, finalDuration)
-            let end = calculateTimePercentage(ads.get(video_id).end, finalDuration)
+            let start = calculateTimePercentage(
+                ads.get(video_id).start,
+                finalDuration
+            );
+            let end = calculateTimePercentage(
+                ads.get(video_id).end,
+                finalDuration
+            );
             //console.log(percentage);
             addAd(start, end);
         })
         .catch((error) => {
             console.log(error);
         });
-
 }
 
-fetch("http://localhost:4000/graphql", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-    mode: "no-cors"
-  },
-  body: JSON.stringify({ query: "{ videos { id, length } }" })
+fetch('http://localhost:4000/graphql', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        mode: 'no-cors'
+    },
+    body: JSON.stringify({ query: '{ videos { id, length } }' })
 })
-  .then(r => r.json())
-  .then(data => console.log("data returned:", data));
+    .then((r) => r.json())
+    .then((data) => console.log('data returned:', data));
 
 function parseISO8601Duration(iso8601Duration, iso8601DurationRegex) {
-  var matches = iso8601Duration.match(iso8601DurationRegex);
+    var matches = iso8601Duration.match(iso8601DurationRegex);
 
-  return {
-    sign: matches[1] === undefined ? "+" : "-",
-    years: matches[2] === undefined ? 0 : matches[2],
-    months: matches[3] === undefined ? 0 : matches[3],
-    weeks: matches[4] === undefined ? 0 : matches[4],
-    days: matches[5] === undefined ? 0 : matches[5],
-    hours: matches[6] === undefined ? 0 : matches[6],
-    minutes: matches[7] === undefined ? 0 : matches[7],
-    seconds: matches[8] === undefined ? 0 : matches[8]
-  };
+    return {
+        sign: matches[1] === undefined ? '+' : '-',
+        years: matches[2] === undefined ? 0 : matches[2],
+        months: matches[3] === undefined ? 0 : matches[3],
+        weeks: matches[4] === undefined ? 0 : matches[4],
+        days: matches[5] === undefined ? 0 : matches[5],
+        hours: matches[6] === undefined ? 0 : matches[6],
+        minutes: matches[7] === undefined ? 0 : matches[7],
+        seconds: matches[8] === undefined ? 0 : matches[8]
+    };
 }
 
 function clearMarkers() {
-  $("div").remove(".ytstmp-mrkr");
+    $('div').remove('.ytstmp-mrkr');
 }
 
 function calculateTimePercentage(currentTime, totalTime) {
-  return (calculateTime(currentTime) / calculateTime(totalTime)) * 100.0;
+    return (calculateTime(currentTime) / calculateTime(totalTime)) * 100.0;
 }
 
 function calculateTime(time) {
-    time = time.split(":");
+    time = time.split(':');
     let totalTime = 0;
     let position = time.length - 1;
     let multiplier = 1;
