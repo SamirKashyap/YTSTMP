@@ -63,6 +63,7 @@ function addAd(start, end) {
 $('video').on('timeupdate', function(event) {
     let video_id = getVideoID();
     if (
+        ads.get(video_id) &&
         Math.floor(this.currentTime) === calculateTime(ads.get(video_id).start)
     ) {
         this.currentTime = calculateTime(ads.get(video_id).end);
