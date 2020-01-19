@@ -4,20 +4,20 @@
 <script src="popup.js"></script>
 
 <head>
-    <title>Title</title>
+  <title>Title</title>
 </head>
 
 <body>
-    <form id=submitForm>
-        <select id='type'>
-            <option value="Ad">Ad</option>
-            <option value="Timestamp">Timestamp</option>
-        </select><br>
-        Start time: <input id="start" type="text" name="StartTime"><br>
-        End time: <input id="end" type="text" name="EndTime"><br>
-        Description: <input id="description" type="text" name="Description"><br>
-        <button id="submitButton">Submit</button><br>
-    </form>
+  <form id=submitForm>
+    <select id='type'>
+      <option value="Ad">Ad</option>
+      <option value="Timestamp">Timestamp</option>
+    </select><br>
+    Start time: <input id="start" type="text" name="StartTime"><br>
+    <div id="endText" style="display:block;">End time: <input id="end" type="text" name="EndTime" style="display:block;"></div><br>
+    Description: <input id="description" type="text" name="Description"><br>
+    <button id="submitButton">Submit</button><br>
+  </form>
 </body>
 
 </html>

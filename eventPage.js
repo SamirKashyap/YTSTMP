@@ -33,21 +33,3 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 
 });
-
-// chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-//     console.log(request);
-//     if (request.data.type === 'Ad') {
-//         ads.set(getVideoID(), {
-//             start: request.data.start,
-//             end: request.data.end
-//         });
-//         console.log('yeet');
-//         loadAds();
-//     } else {
-//         //here we get the new
-//         console.log('URL CHANGED: ' + request.data.url);
-//         clearMarkers();
-//         scrapeDescription();
-//     }
-
-// });

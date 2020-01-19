@@ -15,5 +15,18 @@ function submit() {
 $(document).ready(function () {
     $('#submitButton').on('click', () => {
         submit();
-    })
+    });
+
+    $('#type').change(() => {
+      if($('#type').val() == "Timestamp") {
+        $('#end').css('display','none')
+        $('#endText').css('display','none')
+      } else {
+        $('#end').css('display','block')
+        $('#endText').css('display','block')
+      }
+    });
 });
+
+
+
