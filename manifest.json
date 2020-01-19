@@ -22,7 +22,7 @@
         "16": "icon16.png"
     },
     "background": {
-        "scripts": ["eventPage.js", "background.js"],
+        "scripts": ["eventPage.js"],
         "persistent": false
     },
     "browser_action": {
