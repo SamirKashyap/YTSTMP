@@ -4,11 +4,9 @@
     "version": "1.0",
     "description": "A extension for timestamping Youtube videos.",
     "permissions": [
-        // "tabs",
-        // "https://*.youtube.com/*",
-        // "https://www.googleapis.com/*",
-        // "https://googleapis.com/*",
-        // "http://www.googleapis.com/*"
+      "tabs",
+        "https://*.youtube.com/watch*",
+        "*.googleapis.com/*"
     ],
     "content_scripts": [
         {
