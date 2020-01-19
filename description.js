@@ -42,10 +42,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   doSomething();
 });
 
-<<<<<<< HEAD
-=======
-
->>>>>>> a4f2f93e0bf9747cb71ddceb1e185b651545bbcc
 function Submit() {
   let Type = document.getElementById("Type").value;
   let Description = document.getElementByName("Description").value;
