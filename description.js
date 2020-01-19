@@ -19,6 +19,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     doSomething();
 });
 
+function Submit() {
+    let Type = document.getElementById("Type").value;
+    let StartTime = document.getElementByName("StartTime").value;
+    let EndTime = document.getElementByName("EndTime").value;
+    let Description = document.getElementByName("Description").value;
+    console.log(Type, StartTime, EndTime, Description);
+  }
+
 function addMarker(percentage) {
     $('.ytp-progress-list').prepend(
         `<div class="ytstmp-mrkr" style=background-color:#00FFFF;width:.40%;left:${percentage}%;z-index:100000;height:175%;position:absolute;top:-0.35em;></div>`
