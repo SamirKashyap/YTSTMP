@@ -20,16 +20,40 @@ window.onload = () => {
 };
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    //here we get the new 
+    //here we get the new
     console.log("URL CHANGED: " + request.data.url);
     clearMarkers();
     doSomething();
 });
 
-function addMarker(percentage) {
+    
+function Submit() {
+    let Type = document.getElementById("Type").value;
+    let Description = document.getElementByName("Description").value;
+    let EndTime = document.getElementByName("EndTime").value;
+    let StartTime = document.getElementByName("StartTime").value;
+    console.log(Type, StartTime, EndTime, Description);
+}
+function addMarker(percentage,description) {
+  if(percentage > 50){
     $('.ytp-progress-list').prepend(
-        `<div class="ytstmp-mrkr" style=background-color:#00FFFF;width:.40%;left:${percentage}%;z-index:100000;height:175%;position:absolute;top:-0.35em;></div>`
+        `<div class="ytstmp-mrkr" style="left:${percentage}%;"">
+          <span class="ytstmp-description" id="right">${description}</span>
+        </div>`
     );
+  } else if(percentage < 50){
+    $('.ytp-progress-list').prepend(
+        `<div class="ytstmp-mrkr" style="left:${percentage}%;"">
+          <span class="ytstmp-description" id="left">${description}</span>
+        </div>`
+    );
+  } else {
+    $('.ytp-progress-list').prepend(
+        `<div class="ytstmp-mrkr" style="left:${percentage}%;"">
+          <span class="ytstmp-description" id="center">${description}</span>
+        </div>`
+    );
+  }
 }
 
 function addAd(start, end) {
@@ -107,7 +131,7 @@ function doSomething() {
             for (stamp of newStamps) {
                 let percentage = calculateTimePercentage(stamp.stamp, finalDuration)
                 //console.log(percentage);
-                addMarker(percentage);
+                addMarker(percentage, stamp.text);
             }
         })
         .catch((error) => {

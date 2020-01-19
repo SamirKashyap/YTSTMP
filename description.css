@@ -1,0 +1,37 @@
+.ytstmp-mrkr{
+  background-color:#00FFFF;
+  width:.40%;
+  z-index:100000;
+  height:175%;
+  position:absolute;
+  top:-0.35em;
+}
+
+.ytstmp-description{
+  visibility: hidden;
+  font-size: 2em;
+  white-space: nowrap;
+  position:absolute;
+  top:-5.84em;
+  padding: .1rem;
+}
+
+.ytstmp-mrkr:hover .ytstmp-description{
+  background-color: black;
+  z-index: 1000 !important;
+  visibility: visible;
+}
+
+#right{
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translateX(-100%);
+  transform: translateX(-100%);
+}
+
+#center{
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+}
