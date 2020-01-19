@@ -1,10 +1,18 @@
 .ytstmp-mrkr{
   background-color:#00FFFF;
-  width:.40%;
+  width:.35%;
   z-index:100000;
   height:175%;
   position:absolute;
   top:-0.35em;
+  transition: all .15s ease-in-out;
+  transform: translateX(-.175%);
+}
+
+.ytstmp-mrkr:hover{
+  width:1.2%;
+  -webkit-transform: translateX(-42.5%);
+  transform: translateX(-42.5%);
 }
 
 .ytstmp-description{
