@@ -13,7 +13,8 @@
         },
         {
             "matches": ["https://*.youtube.com/*"],
-            "js": ["description.js", "jquery-3.4.1.min.js"]
+            "js": ["description.js", "jquery-3.4.1.min.js"],
+            "css": ["description.css"]
         }
     ],
     "icons": {
