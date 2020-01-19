@@ -21,7 +21,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 });
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    if (request.data.type === 'Ad') {
+    if (request.data.type === 'Ad' || request.data.type === 'Timestamp') {
         chrome.tabs.getSelected(null, function (tab) {
             chrome.tabs.sendMessage(tab.id, {
                 data: request.data

@@ -28,12 +28,16 @@ window.onload = () => {
 };
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    console.log(request);
     if (request.data.type === 'Ad') {
         ads.set(getVideoID(), {
             start: request.data.start,
             end: request.data.end
         });
         loadAds();
+    } else if (request.data.type === 'Timestamp') {
+        console.log($('video')[0].duration);
+        addMarker(calculateTime(request.data.start) / $('video')[0].duration * 100.0, request.data.description)
     } else {
         //here we get the new
         console.log('URL CHANGED: ' + request.data.url);
