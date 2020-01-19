@@ -1,10 +1,26 @@
 const api_key = 'AIzaSyChX7b0VFxndHfnqsbMCXRFXzVmMTBlTcQ';
 
-let ads = [{
-    video_id: 'k8V7XV8hjDs',
-    start: '10:52',
-    end: '11:26'
-}]
+// let ads = [{
+//         video_id: 'k8V7XV8hjDs',
+//         start: '10:52',
+//         end: '11:26'
+//     },
+//     {
+//         video_id: 'X089oYPc5Pg',
+//         start: '10:52',
+//         end: '11:26'
+//     }
+// ]
+
+let ads = new Map();
+ads.set('X089oYPc5Pg', {
+    start: '00:29',
+    end: '00:40'
+});
+ads.set('DevM3bbGtoA', {
+    start: '00:21',
+    end: '00:31'
+});
 
 window.onload = () => {
     clearMarkers();
@@ -26,7 +42,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     doSomething();
 });
 
-    
+
 function Submit() {
     let Type = document.getElementById("Type").value;
     let Description = document.getElementByName("Description").value;
@@ -34,26 +50,27 @@ function Submit() {
     let StartTime = document.getElementByName("StartTime").value;
     console.log(Type, StartTime, EndTime, Description);
 }
-function addMarker(percentage,description) {
-  if(percentage > 50){
-    $('.ytp-progress-list').prepend(
-        `<div class="ytstmp-mrkr" style="left:${percentage}%;"">
+
+function addMarker(percentage, description) {
+    if (percentage > 50) {
+        $('.ytp-progress-list').prepend(
+            `<div class="ytstmp-mrkr" style="left:${percentage}%;"">
           <span class="ytstmp-description" id="right">${description}</span>
         </div>`
-    );
-  } else if(percentage < 50){
-    $('.ytp-progress-list').prepend(
-        `<div class="ytstmp-mrkr" style="left:${percentage}%;"">
+        );
+    } else if (percentage < 50) {
+        $('.ytp-progress-list').prepend(
+            `<div class="ytstmp-mrkr" style="left:${percentage}%;"">
           <span class="ytstmp-description" id="left">${description}</span>
         </div>`
-    );
-  } else {
-    $('.ytp-progress-list').prepend(
-        `<div class="ytstmp-mrkr" style="left:${percentage}%;"">
+        );
+    } else {
+        $('.ytp-progress-list').prepend(
+            `<div class="ytstmp-mrkr" style="left:${percentage}%;"">
           <span class="ytstmp-description" id="center">${description}</span>
         </div>`
-    );
-  }
+        );
+    }
 }
 
 function addAd(start, end) {
@@ -68,9 +85,10 @@ function addAd(start, end) {
 $("video").on(
     "timeupdate",
     function (event) {
-        if (Math.floor(this.currentTime) === calculateTime(ads[0].start)) {
+        let video_id = getVideoID();
+        if (Math.floor(this.currentTime) === calculateTime(ads.get(video_id).start)) {
             //window.location.href = `https://www.youtube.com/watch?v=${ads[0].video_id}&t=${calculateTime(ads[0].end)}s`;
-            this.currentTime = calculateTime(ads[0].end);
+            this.currentTime = calculateTime(ads.get(video_id).end);
         }
     });
 
@@ -102,7 +120,7 @@ function parseDescription(description) {
     return timestamps;
 }
 
-function doSomething() {
+function getVideoID() {
     let video_id = window.location.search.split('v=')[1];
     if (video_id && video_id.includes('&')) {
         let ampersandPosition = video_id.indexOf('&');
@@ -110,6 +128,12 @@ function doSomething() {
             video_id = video_id.substring(0, ampersandPosition);
         }
     }
+
+    return video_id;
+}
+
+function doSomething() {
+    let video_id = getVideoID();
     let url = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${video_id}&fields=items/snippet/title,items/snippet/description,items/contentDetails/duration&key=${api_key}`;
     console.log(url);
 
@@ -140,13 +164,7 @@ function doSomething() {
 }
 
 function doSomethingElse() {
-    let video_id = window.location.search.split('v=')[1];
-    if (video_id && video_id.includes('&')) {
-        let ampersandPosition = video_id.indexOf('&');
-        if (ampersandPosition != -1) {
-            video_id = video_id.substring(0, ampersandPosition);
-        }
-    }
+    let video_id = getVideoID();
     let url = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${video_id}&fields=items/snippet/title,items/snippet/description,items/contentDetails/duration&key=${api_key}`;
     console.log(url);
 
@@ -163,8 +181,8 @@ function doSomethingElse() {
             let finalDuration = `${('' + durationParsed.hours).padStart(2, '0')}:${('' + durationParsed.minutes).padStart(2, '0')}:${('' + durationParsed.seconds).padStart(2, '0')}`;
 
             let newStamps = parseDescription(description);
-            let start = calculateTimePercentage(ads[0].start, finalDuration)
-            let end = calculateTimePercentage(ads[0].end, finalDuration)
+            let start = calculateTimePercentage(ads.get(video_id).start, finalDuration)
+            let end = calculateTimePercentage(ads.get(video_id).end, finalDuration)
             //console.log(percentage);
             addAd(start, end);
         })
