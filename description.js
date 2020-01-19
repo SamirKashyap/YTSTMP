@@ -84,6 +84,7 @@ function addAd(start, end) {
 $('video').on('timeupdate', function(event) {
     let video_id = getVideoID();
     if (
+        ads.get(video_id) &&
         Math.floor(this.currentTime) === calculateTime(ads.get(video_id).start)
     ) {
         //window.location.href = `https://www.youtube.com/watch?v=${ads[0].video_id}&t=${calculateTime(ads[0].end)}s`;
