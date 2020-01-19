@@ -31,7 +31,8 @@ function parseDescription(description) {
             timestamps.push({ text, stamp });
         }
     }
-    return timestamps;
+  }
+  return timestamps;
 }
 
 function doSomething() {
@@ -83,5 +84,3 @@ function calculateTime(time){
     }
     return totalTime;
 }
-
-//addMarker(calculateTimePercentage(stamp,duration));
