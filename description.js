@@ -1,8 +1,17 @@
 const api_key = "AIzaSyChX7b0VFxndHfnqsbMCXRFXzVmMTBlTcQ";
 
+let ads = [
+  {
+    video_id: "k8V7XV8hjDs",
+    start: "10:52",
+    end: "11:26"
+  }
+];
+
 window.onload = () => {
   clearMarkers();
   doSomething();
+  doSomethingElse();
   // window.addEventListener("yt-navigate-start", () => {
   //     //chrome.webNavigation.onHistoryStateUpdated( () => {
   //     duration = $('.ytp-time-duration').text();
@@ -19,11 +28,57 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   doSomething();
 });
 
-function addMarker(percentage) {
+function Submit() {
+  let Type = document.getElementById("Type").value;
+  let Description = document.getElementByName("Description").value;
+  let EndTime = document.getElementByName("EndTime").value;
+  let StartTime = document.getElementByName("StartTime").value;
+  console.log(Type, StartTime, EndTime, Description);
+}
+function addMarker(percentage, description) {
+  if (percentage > 50) {
+    $(".ytp-progress-list").prepend(
+      `<div class="ytstmp-mrkr" style="left:${percentage}%;"">
+          <span class="ytstmp-description" id="right">${description}</span>
+        </div>`
+    );
+  } else if (percentage < 50) {
+    $(".ytp-progress-list").prepend(
+      `<div class="ytstmp-mrkr" style="left:${percentage}%;"">
+          <span class="ytstmp-description" id="left">${description}</span>
+        </div>`
+    );
+  } else {
+    $(".ytp-progress-list").prepend(
+      `<div class="ytstmp-mrkr" style="left:${percentage}%;"">
+          <span class="ytstmp-description" id="center">${description}</span>
+        </div>`
+    );
+  }
+}
+
+function addAd(start, end) {
+  let width = end - start;
+  console.log(start);
+  console.log(width);
   $(".ytp-progress-list").prepend(
-    `<div class="ytstmp-mrkr" style=background-color:#00FFFF;width:.40%;left:${percentage}%;z-index:100000;height:175%;position:absolute;top:-0.35em;></div>`
+    `<div class="ytstmp-mrkr" style=background-color:#FFFF00;width:${width}%;left:${start}%;z-index:100000;height:175%;position:absolute;top:-0.35em;></div>`
   );
 }
+
+$("video").on("timeupdate", function(event) {
+  if (Math.floor(this.currentTime) === calculateTime(ads[0].start)) {
+    //window.location.href = `https://www.youtube.com/watch?v=${ads[0].video_id}&t=${calculateTime(ads[0].end)}s`;
+    this.currentTime = calculateTime(ads[0].end);
+  }
+});
+
+// $('.ytp-time-current').on("change", () => {
+//     console.log($('.ytp-time-current').text());
+//     if (time === ads[0].start) {
+//         window.location.href = `https://www.youtube.com/watch?v=${ads[0].video_id}&t=${calculateTime(ads[0].end)}s`;
+//     }
+// })
 
 function parseDescription(description) {
   let lines = description.split("\n");
@@ -77,8 +132,44 @@ function doSomething() {
       for (stamp of newStamps) {
         let percentage = calculateTimePercentage(stamp.stamp, finalDuration);
         //console.log(percentage);
-        addMarker(percentage);
+        addMarker(percentage, stamp.text);
       }
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+function doSomethingElse() {
+  let video_id = window.location.search.split("v=")[1];
+  if (video_id && video_id.includes("&")) {
+    let ampersandPosition = video_id.indexOf("&");
+    if (ampersandPosition != -1) {
+      video_id = video_id.substring(0, ampersandPosition);
+    }
+  }
+  let url = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${video_id}&fields=items/snippet/title,items/snippet/description,items/contentDetails/duration&key=${api_key}`;
+  console.log(url);
+
+  fetch(url)
+    .then(data => {
+      return data.json();
+    })
+    .then(response => {
+      let description = response.items[0].snippet.description;
+
+      let duration = response.items[0].contentDetails.duration;
+      let iso8601DurationRegex = /(-)?P(?:([.,\d]+)Y)?(?:([.,\d]+)M)?(?:([.,\d]+)W)?(?:([.,\d]+)D)?(?:T(?:([.,\d]+)H)?(?:([.,\d]+)M)?(?:([.,\d]+)S)?)?/;
+      let durationParsed = parseISO8601Duration(duration, iso8601DurationRegex);
+      let finalDuration = `${("" + durationParsed.hours).padStart(2, "0")}:${(
+        "" + durationParsed.minutes
+      ).padStart(2, "0")}:${("" + durationParsed.seconds).padStart(2, "0")}`;
+
+      let newStamps = parseDescription(description);
+      let start = calculateTimePercentage(ads[0].start, finalDuration);
+      let end = calculateTimePercentage(ads[0].end, finalDuration);
+      //console.log(percentage);
+      addAd(start, end);
     })
     .catch(error => {
       console.log(error);
