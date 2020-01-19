@@ -1,6 +1,6 @@
 const api_key = 'AIzaSyChX7b0VFxndHfnqsbMCXRFXzVmMTBlTcQ';
 
-let ads = new Map();
+const ads = new Map();
 ads.set('X089oYPc5Pg', {
     start: '00:29',
     end: '00:40'
@@ -14,22 +14,34 @@ window.onload = () => {
     clearMarkers();
     scrapeDescription();
     loadAds();
+
+    $('video').on('timeupdate', function (event) {
+        let video_id = getVideoID();
+        if (
+            ads.get(video_id) &&
+            Math.floor(this.currentTime) === calculateTime(ads.get(video_id).start)
+        ) {
+
+            this.currentTime = calculateTime(ads.get(video_id).end);
+        }
+    });
 };
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    //here we get the new
-    console.log('URL CHANGED: ' + request.data.url);
-    clearMarkers();
-    scrapeDescription();
-});
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.data.type === 'Ad') {
+        ads.set(getVideoID(), {
+            start: request.data.start,
+            end: request.data.end
+        });
+        loadAds();
+    } else {
+        //here we get the new
+        console.log('URL CHANGED: ' + request.data.url);
+        clearMarkers();
+        scrapeDescription();
+    }
 
-function Submit() {
-    let Type = document.getElementById('Type').value;
-    let Description = document.getElementByName('Description').value;
-    let EndTime = document.getElementByName('EndTime').value;
-    let StartTime = document.getElementByName('StartTime').value;
-    console.log(Type, StartTime, EndTime, Description);
-}
+});
 
 function addMarker(percentage, description) {
     if (percentage > 50) {
@@ -60,15 +72,7 @@ function addAd(start, end) {
     );
 }
 
-$('video').on('timeupdate', function(event) {
-    let video_id = getVideoID();
-    if (
-        ads.get(video_id) &&
-        Math.floor(this.currentTime) === calculateTime(ads.get(video_id).start)
-    ) {
-        this.currentTime = calculateTime(ads.get(video_id).end);
-    }
-});
+
 
 
 function parseDescription(description) {
@@ -100,7 +104,6 @@ function getVideoID() {
             video_id = video_id.substring(0, ampersandPosition);
         }
     }
-
     return video_id;
 }
 
@@ -178,19 +181,20 @@ function loadAds() {
             );
             addAd(start, end);
         })
-        .catch((error) => {
-        });
+        .catch((error) => {});
 }
 
 fetch('http://localhost:4000/graphql', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        mode: 'no-cors'
-    },
-    body: JSON.stringify({ query: '{ videos { id, length } }' })
-})
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            mode: 'no-cors'
+        },
+        body: JSON.stringify({
+            query: '{ videos { id, length } }'
+        })
+    })
     .then((r) => r.json())
     .then((data) => console.log('data returned:', data));
 
