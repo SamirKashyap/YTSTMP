@@ -1,17 +1,5 @@
 const api_key = 'AIzaSyChX7b0VFxndHfnqsbMCXRFXzVmMTBlTcQ';
 
-// let ads = [{
-//         video_id: 'k8V7XV8hjDs',
-//         start: '10:52',
-//         end: '11:26'
-//     },
-//     {
-//         video_id: 'X089oYPc5Pg',
-//         start: '10:52',
-//         end: '11:26'
-//     }
-// ]
-
 let ads = new Map();
 ads.set('X089oYPc5Pg', {
     start: '00:29',
@@ -24,22 +12,15 @@ ads.set('DevM3bbGtoA', {
 
 window.onload = () => {
     clearMarkers();
-    doSomething();
-    doSomethingElse();
-    // window.addEventListener("yt-navigate-start", () => {
-    //     //chrome.webNavigation.onHistoryStateUpdated( () => {
-    //     duration = $('.ytp-time-duration').text();
-    //     clearMarkers();
-    //     doSomething();
-    // });
-    //doSomething();
+    scrapeDescription();
+    loadAds();
 };
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     //here we get the new
     console.log('URL CHANGED: ' + request.data.url);
     clearMarkers();
-    doSomething();
+    scrapeDescription();
 });
 
 function Submit() {
@@ -74,10 +55,8 @@ function addMarker(percentage, description) {
 
 function addAd(start, end) {
     let width = end - start;
-    console.log(start);
-    console.log(width);
     $('.ytp-progress-list').prepend(
-        `<div class="ytstmp-mrkr" style=background-color:#FFFF00;width:${width}%;left:${start}%;z-index:100000;height:175%;position:absolute;top:-0.35em;></div>`
+        `<div class="ytstmp-admrkr" style=width:${width}%;left:${start}%;></div>`
     );
 }
 
@@ -86,17 +65,10 @@ $('video').on('timeupdate', function(event) {
     if (
         Math.floor(this.currentTime) === calculateTime(ads.get(video_id).start)
     ) {
-        //window.location.href = `https://www.youtube.com/watch?v=${ads[0].video_id}&t=${calculateTime(ads[0].end)}s`;
         this.currentTime = calculateTime(ads.get(video_id).end);
     }
 });
 
-// $('.ytp-time-current').on("change", () => {
-//     console.log($('.ytp-time-current').text());
-//     if (time === ads[0].start) {
-//         window.location.href = `https://www.youtube.com/watch?v=${ads[0].video_id}&t=${calculateTime(ads[0].end)}s`;
-//     }
-// })
 
 function parseDescription(description) {
     let lines = description.split('\n');
@@ -131,10 +103,9 @@ function getVideoID() {
     return video_id;
 }
 
-function doSomething() {
+function scrapeDescription() {
     let video_id = getVideoID();
     let url = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${video_id}&fields=items/snippet/title,items/snippet/description,items/contentDetails/duration&key=${api_key}`;
-    console.log(url);
 
     fetch(url)
         .then((data) => {
@@ -158,13 +129,11 @@ function doSomething() {
 
             let newStamps = parseDescription(description);
 
-            console.log(finalDuration);
             for (stamp of newStamps) {
                 let percentage = calculateTimePercentage(
                     stamp.stamp,
                     finalDuration
                 );
-                //console.log(percentage);
                 addMarker(percentage, stamp.text);
             }
         })
@@ -173,10 +142,9 @@ function doSomething() {
         });
 }
 
-function doSomethingElse() {
+function loadAds() {
     let video_id = getVideoID();
     let url = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${video_id}&fields=items/snippet/title,items/snippet/description,items/contentDetails/duration&key=${api_key}`;
-    console.log(url);
 
     fetch(url)
         .then((data) => {
@@ -207,11 +175,9 @@ function doSomethingElse() {
                 ads.get(video_id).end,
                 finalDuration
             );
-            //console.log(percentage);
             addAd(start, end);
         })
         .catch((error) => {
-            console.log(error);
         });
 }
 
@@ -244,6 +210,7 @@ function parseISO8601Duration(iso8601Duration, iso8601DurationRegex) {
 
 function clearMarkers() {
     $('div').remove('.ytstmp-mrkr');
+    $('div').remove('.ytstmp-admrkr');
 }
 
 function calculateTimePercentage(currentTime, totalTime) {

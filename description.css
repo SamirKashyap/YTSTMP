@@ -1,8 +1,16 @@
+.ytstmp-admrkr{
+  background-color:#FFFF00;
+  z-index:100000;
+  height:160%;
+  position:absolute;
+  top:-0.35em;
+}
+
 .ytstmp-mrkr{
   background-color:#00FFFF;
   width:.35%;
   z-index:100000;
-  height:175%;
+  height:160%;
   position:absolute;
   top:-0.35em;
   transition: all .15s ease-in-out;
