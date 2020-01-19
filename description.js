@@ -1,5 +1,6 @@
 const api_key = "AIzaSyChX7b0VFxndHfnqsbMCXRFXzVmMTBlTcQ";
 
+<<<<<<< HEAD
 let ads = [
   {
     video_id: "k8V7XV8hjDs",
@@ -7,6 +8,29 @@ let ads = [
     end: "11:26"
   }
 ];
+=======
+// let ads = [{
+//         video_id: 'k8V7XV8hjDs',
+//         start: '10:52',
+//         end: '11:26'
+//     },
+//     {
+//         video_id: 'X089oYPc5Pg',
+//         start: '10:52',
+//         end: '11:26'
+//     }
+// ]
+
+let ads = new Map();
+ads.set('X089oYPc5Pg', {
+    start: '00:29',
+    end: '00:40'
+});
+ads.set('DevM3bbGtoA', {
+    start: '00:21',
+    end: '00:31'
+});
+>>>>>>> a4f2f93e0bf9747cb71ddceb1e185b651545bbcc
 
 window.onload = () => {
   clearMarkers();
@@ -28,6 +52,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   doSomething();
 });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> a4f2f93e0bf9747cb71ddceb1e185b651545bbcc
 function Submit() {
   let Type = document.getElementById("Type").value;
   let Description = document.getElementByName("Description").value;
@@ -35,6 +63,7 @@ function Submit() {
   let StartTime = document.getElementByName("StartTime").value;
   console.log(Type, StartTime, EndTime, Description);
 }
+<<<<<<< HEAD
 function addMarker(percentage, description) {
   if (percentage > 50) {
     $(".ytp-progress-list").prepend(
@@ -51,10 +80,29 @@ function addMarker(percentage, description) {
   } else {
     $(".ytp-progress-list").prepend(
       `<div class="ytstmp-mrkr" style="left:${percentage}%;"">
+=======
+
+function addMarker(percentage, description) {
+    if (percentage > 50) {
+        $('.ytp-progress-list').prepend(
+            `<div class="ytstmp-mrkr" style="left:${percentage}%;"">
+          <span class="ytstmp-description" id="right">${description}</span>
+        </div>`
+        );
+    } else if (percentage < 50) {
+        $('.ytp-progress-list').prepend(
+            `<div class="ytstmp-mrkr" style="left:${percentage}%;"">
+          <span class="ytstmp-description" id="left">${description}</span>
+        </div>`
+        );
+    } else {
+        $('.ytp-progress-list').prepend(
+            `<div class="ytstmp-mrkr" style="left:${percentage}%;"">
+>>>>>>> a4f2f93e0bf9747cb71ddceb1e185b651545bbcc
           <span class="ytstmp-description" id="center">${description}</span>
         </div>`
-    );
-  }
+        );
+    }
 }
 
 function addAd(start, end) {
@@ -66,12 +114,24 @@ function addAd(start, end) {
   );
 }
 
+<<<<<<< HEAD
 $("video").on("timeupdate", function(event) {
   if (Math.floor(this.currentTime) === calculateTime(ads[0].start)) {
     //window.location.href = `https://www.youtube.com/watch?v=${ads[0].video_id}&t=${calculateTime(ads[0].end)}s`;
     this.currentTime = calculateTime(ads[0].end);
   }
 });
+=======
+$("video").on(
+    "timeupdate",
+    function (event) {
+        let video_id = getVideoID();
+        if (Math.floor(this.currentTime) === calculateTime(ads.get(video_id).start)) {
+            //window.location.href = `https://www.youtube.com/watch?v=${ads[0].video_id}&t=${calculateTime(ads[0].end)}s`;
+            this.currentTime = calculateTime(ads.get(video_id).end);
+        }
+    });
+>>>>>>> a4f2f93e0bf9747cb71ddceb1e185b651545bbcc
 
 // $('.ytp-time-current').on("change", () => {
 //     console.log($('.ytp-time-current').text());
@@ -101,6 +161,7 @@ function parseDescription(description) {
   return timestamps;
 }
 
+<<<<<<< HEAD
 function doSomething() {
   let video_id = window.location.search.split("v=")[1];
   if (video_id && video_id.includes("&")) {
@@ -174,6 +235,78 @@ function doSomethingElse() {
     .catch(error => {
       console.log(error);
     });
+=======
+function getVideoID() {
+    let video_id = window.location.search.split('v=')[1];
+    if (video_id && video_id.includes('&')) {
+        let ampersandPosition = video_id.indexOf('&');
+        if (ampersandPosition != -1) {
+            video_id = video_id.substring(0, ampersandPosition);
+        }
+    }
+
+    return video_id;
+}
+
+function doSomething() {
+    let video_id = getVideoID();
+    let url = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${video_id}&fields=items/snippet/title,items/snippet/description,items/contentDetails/duration&key=${api_key}`;
+    console.log(url);
+
+    fetch(url)
+        .then((data) => {
+            return data.json();
+        })
+        .then((response) => {
+            let description = response.items[0].snippet.description;
+
+            let duration = response.items[0].contentDetails.duration;
+            let iso8601DurationRegex = /(-)?P(?:([.,\d]+)Y)?(?:([.,\d]+)M)?(?:([.,\d]+)W)?(?:([.,\d]+)D)?(?:T(?:([.,\d]+)H)?(?:([.,\d]+)M)?(?:([.,\d]+)S)?)?/;
+            let durationParsed = parseISO8601Duration(duration, iso8601DurationRegex);
+            let finalDuration = `${('' + durationParsed.hours).padStart(2, '0')}:${('' + durationParsed.minutes).padStart(2, '0')}:${('' + durationParsed.seconds).padStart(2, '0')}`;
+
+            let newStamps = parseDescription(description);
+
+            console.log(finalDuration);
+            for (stamp of newStamps) {
+                let percentage = calculateTimePercentage(stamp.stamp, finalDuration)
+                //console.log(percentage);
+                addMarker(percentage, stamp.text);
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+}
+
+function doSomethingElse() {
+    let video_id = getVideoID();
+    let url = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${video_id}&fields=items/snippet/title,items/snippet/description,items/contentDetails/duration&key=${api_key}`;
+    console.log(url);
+
+    fetch(url)
+        .then((data) => {
+            return data.json();
+        })
+        .then((response) => {
+            let description = response.items[0].snippet.description;
+
+            let duration = response.items[0].contentDetails.duration;
+            let iso8601DurationRegex = /(-)?P(?:([.,\d]+)Y)?(?:([.,\d]+)M)?(?:([.,\d]+)W)?(?:([.,\d]+)D)?(?:T(?:([.,\d]+)H)?(?:([.,\d]+)M)?(?:([.,\d]+)S)?)?/;
+            let durationParsed = parseISO8601Duration(duration, iso8601DurationRegex);
+            let finalDuration = `${('' + durationParsed.hours).padStart(2, '0')}:${('' + durationParsed.minutes).padStart(2, '0')}:${('' + durationParsed.seconds).padStart(2, '0')}`;
+
+            let newStamps = parseDescription(description);
+            let start = calculateTimePercentage(ads.get(video_id).start, finalDuration)
+            let end = calculateTimePercentage(ads.get(video_id).end, finalDuration)
+            //console.log(percentage);
+            addAd(start, end);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+
+>>>>>>> a4f2f93e0bf9747cb71ddceb1e185b651545bbcc
 }
 
 fetch("http://localhost:4000/graphql", {
@@ -212,6 +345,7 @@ function calculateTimePercentage(currentTime, totalTime) {
 }
 
 function calculateTime(time) {
+<<<<<<< HEAD
   time = time.split(":");
   let totalTime = 0;
   let position = time.length - 1;
@@ -223,3 +357,16 @@ function calculateTime(time) {
   }
   return totalTime;
 }
+=======
+    time = time.split(":");
+    let totalTime = 0;
+    let position = time.length - 1;
+    let multiplier = 1;
+    while (position >= 0) {
+        totalTime += time[position] * multiplier;
+        multiplier = multiplier * 60;
+        position -= 1;
+    }
+    return totalTime;
+}
+>>>>>>> a4f2f93e0bf9747cb71ddceb1e185b651545bbcc
