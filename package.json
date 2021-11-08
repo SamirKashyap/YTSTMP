@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/SamirKashyap/YTSTMP#readme",
   "dependencies": {
-    "apollo-server": "^2.14.2",
+    "apollo-server": "^2.25.3",
     "apollo-server-express": "^2.14.2",
     "crypto": "^1.0.1",
     "express": "^4.17.1",
